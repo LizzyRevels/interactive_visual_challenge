@@ -13,25 +13,25 @@ d3.json("samples.json").then((data) => {
 // ---------------------------------
 
 // Assign data to a variable 
-// var data = bellyData;
+var data = bellyData;
 
 // Sort the array in ascending order using an arrow function
-var sortedAscending = data.sort((a, b) => a - b);
+var sortedAscending = bellyData.sort((a, b) => a - b);
 
 // Print the results to the console
 console.log(sortedAscending);
 
 // Slice the first ten elements of the sortedAscending array, assign to a variable
-var sliced = sortedAscending.slice(0, 10);
+slicedData = sortedAscending.slice(0, 10);
 // console.log(sliced);
 
 // Horizontal Bar Chart - Reverse the array to accommodate Plotly's defaults
-reversedData = sliced.reverse();
+reversedData = slicedData.reverse();
 
 // Trace1 for the OTU Data
 var trace1 = {
-  x: reversedData.map(object => object.samples_values),
-  y: reversedData.map(object => object.otu_ids),
+  x: slicedData,
+  y: reversedData,
   text: reversedData.map(object => object.otu_labels),
   name: "Top 10 OTUs",
   type: "bar",
@@ -52,7 +52,21 @@ var layout = {
   }
 };
 
-Plotly.newPlot("plot", data, layout);
+Plotly.newPlot("bar", data, layout);
+
+// Call updatePlotly() when a change takes place to the DOM
+d3.selectAll("#selDataset").on("change", updatePlotly);
+
+// This function is called when a dropdown menu item is selected
+function updatePlotly() {
+  // Use D3 to select the dropdown menu
+  var dropdownMenu = d3.select("#selDataset");
+  // Assign the value of the dropdown menu option to a variable
+  var dataset = dropdownMenu.property("value");
+
+  // Initialize x and y arrays
+  var x = [];
+  var y = [];
 
 
 // 3. Create a bubble chart that displays each sample.
@@ -68,4 +82,4 @@ Plotly.newPlot("plot", data, layout);
   // 5. Display each key-value pair from the metadata JSON object somewhere 
   // on the page.
 
-  // 6. Update all of the plots any time that a new sample is selected
+  // 6. Update all of the plots any time that a new sample is selected.
